@@ -4,6 +4,30 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <Nullable>enable</Nullable>
     <LangVersion>9</LangVersion>
+    <Title>C# Code Utils</Title>
+    <Authors>ChillPillGames</Authors>
+    <PackageId>$(Authors).$(AssemblyName)</PackageId>
+    <Description>This package provides following extensions: List extensions, String extensions, Binary extensions, Singleton pattern, Id/Address class and IdGenerator</Description>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/cpgames/CodeUtils.git</RepositoryUrl>
+    <PackageTags>c#; code extensions; singleton; Id; Address; IdGenerator</PackageTags>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Update="icon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Update="LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Update="README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
 </Project>
