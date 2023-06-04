@@ -49,7 +49,7 @@ namespace cpGames.core
             {
                 return s;
             }
-            return char.ToUpper(s[0]) + s[1..];
+            return char.ToUpper(s[0]) + string.Concat(s.Skip(1));
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace cpGames.core
         /// </summary>
         public static string Decapitalize(this string s)
         {
-            return char.ToLower(s[0]) + s[1..];
+            return char.ToLower(s[0]) + string.Concat(s.Skip(1));
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace cpGames.core
             {
                 return s;
             }
-            return string.Concat(s[..length], "...");
+            return string.Concat(s.Take(length));
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace cpGames.core
             {
                 if (!char.IsDigit(s[i]))
                 {
-                    letterPart = s[..(i + 1)];
+                    letterPart = s.Substring(0, i + 1);
                     break;
                 }
                 builder.Insert(0, s[i]);

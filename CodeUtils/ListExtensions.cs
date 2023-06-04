@@ -39,9 +39,11 @@ namespace cpGames.core
             return (from object item in enumerable select (T)item).ToList();
         }
 
-        public static string ToString(this IList list, string separator)
+        public static string ToString(this IEnumerable enumerable, string separator)
         {
-            return string.Join(separator, list.ToArray<string>());
+            var str = enumerable.Cast<object>()
+                .Aggregate(string.Empty, (current, o) => current + (o + separator));
+            return str.Remove(str.Length - separator.Length);
         }
 
         public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)

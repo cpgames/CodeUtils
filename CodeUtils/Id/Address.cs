@@ -54,6 +54,55 @@ namespace cpGames.core
             IdCount = ids.Length;
         }
 
+        public Address(byte[] bytes)
+        {
+            _bytes = bytes;
+            IdCount = 0;
+            if (bytes is { Length: > 0 })
+            {
+                var i = 0;
+                while (i < bytes.Length)
+                {
+                    var size = bytes[i++];
+                    if (size > 0)
+                    {
+                        i += size;
+                        IdCount++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+
+        public Address(string str)
+        {
+            var idTokens = str.Split('/');
+            var ids = new List<Id>();
+            var size = idTokens.Length;
+            foreach (var idToken in idTokens)
+            {
+                var id = new Id(idToken);
+                if (!id.IsValid)
+                {
+                    throw new Exception("Id is invalid.");
+                }
+                ids.Add(id);
+                size += id.Length;
+            }
+            _bytes = new byte[size];
+            var i = 0;
+            foreach (var id in ids)
+            {
+                _bytes[i++] = id.Length;
+                id.Bytes!.CopyTo(_bytes, i);
+                i += id.Length;
+            }
+            IdCount = ids.Count;
+        }
+
         public Address(Address other)
         {
             if (other.IsValid)
@@ -148,7 +197,12 @@ namespace cpGames.core
                 {
                     var size = Bytes![i++];
                     var bytes = new byte[size];
-                    Array.Copy(Bytes, i, bytes, 0, bytes.Length);
+                    Array.Copy(
+                        Bytes,
+                        i,
+                        bytes,
+                        0,
+                        bytes.Length);
                     ids.Add(new Id(bytes));
                     i += bytes.Length;
                 }
@@ -177,7 +231,12 @@ namespace cpGames.core
             }
             size = Bytes[i++];
             var bytes = new byte[size];
-            Array.Copy(Bytes, i, bytes, 0, bytes.Length);
+            Array.Copy(
+                Bytes,
+                i,
+                bytes,
+                0,
+                bytes.Length);
             return new Id(bytes);
         }
 
@@ -188,7 +247,7 @@ namespace cpGames.core
 
         public byte GetLastByte()
         {
-            return !IsValid ? (byte)0 : Bytes![^1];
+            return !IsValid ? (byte)0 : Bytes![Bytes.Length - 1];
         }
 
         public bool IsPartialAddress(Address fullAddress)
@@ -253,7 +312,7 @@ namespace cpGames.core
 
         public override string ToString()
         {
-            return !IsValid ? string.Empty : GetIds().ToString(", ");
+            return !IsValid ? string.Empty : GetIds().ToString("/");
         }
 
         public static object Deserialize(byte[] data)

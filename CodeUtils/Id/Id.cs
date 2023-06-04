@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace cpGames.core
 {
@@ -47,19 +45,19 @@ namespace cpGames.core
 
         public Id(string str)
         {
-            var tokens =
-                str.Replace("{", "")
-                    .Replace("}", "")
-                    .Split('-');
-            if (tokens.All(token => token.Length == 2))
+            if (str.Length == 0)
             {
-                _bytes = tokens
-                    .Select(x => Convert.ToByte(x, 16))
-                    .ToArray();
+                _bytes = null;
             }
             else
             {
-                _bytes = Encoding.ASCII.GetBytes(str);
+                _bytes = new byte[str.Length / 2];
+                for (var i = 0; i < str.Length; i += 2)
+                {
+                    var byteStr = str.Substring(i, 2);
+                    var b = Convert.ToByte(byteStr, 16);
+                    _bytes[i / 2] = b;
+                }
             }
         }
         #endregion
@@ -91,7 +89,7 @@ namespace cpGames.core
 
         public byte GetLastByte()
         {
-            return Bytes != null ? Bytes[^1] : (byte)0;
+            return Bytes != null ? Bytes[Bytes.Length - 1] : (byte)0;
         }
 
         public override bool Equals(object obj)
@@ -109,8 +107,8 @@ namespace cpGames.core
             {
                 return 0;
             }
-            var bytes = new byte[4];
-            memcpy(bytes, Bytes!, 4);
+            var bytes = new byte[] { 0, 0, 0, 0 };
+            memcpy(bytes, Bytes!, Bytes!.Length);
             return BitConverter.ToInt32(bytes, 0);
         }
 
@@ -134,28 +132,18 @@ namespace cpGames.core
             return new Id(bytes);
         }
 
-        public string ToString(bool fancy)
+        public override string ToString()
         {
             if (!IsValid)
             {
-                return "INVALID";
+                return string.Empty;
             }
-            if (fancy)
+            var str = string.Empty;
+            for (var i = 0; i < Bytes!.Length; i++)
             {
-                var str = string.Empty;
-                for (var i = 0; i < Bytes!.Length - 1; i++)
-                {
-                    str += $"{Bytes[i]:X2}-";
-                }
-                str += $"{Bytes[^1]:X2}";
-                return "{" + str + "}";
+                str += $"{Bytes[i]:X2}";
             }
-            return Encoding.ASCII.GetString(Bytes!);
-        }
-
-        public override string ToString()
-        {
-            return ToString(true);
+            return str;
         }
 
         public static object Deserialize(byte[] data)

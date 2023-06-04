@@ -42,6 +42,77 @@ public class IdTests
         Assert.AreNotEqual(id1, id3);
     }
 
+
+    [TestMethod]
+    public void IdDictionaryTest()
+    {
+        var dictionary = new Dictionary<Id, string>();
+        for (byte b = 0; b < 255; b++)
+        {
+            var id = new Id(b);
+            dictionary[id] = id.ToString();
+        }
+        for (byte b = 0; b < 255; b++)
+        {
+            var id = new Id(b);
+            Assert.IsTrue(dictionary.TryGetValue(id, out var value));
+            Assert.AreEqual(id.ToString(), value);
+        }
+    }
+
+
+    [TestMethod]
+    public void IdDictionaryTest2()
+    {
+        var dictionary = new Dictionary<Id, string>();
+        dictionary.Add(new Id(0x0D), "13");
+        dictionary.Add(new Id(0x0F), "15");
+        dictionary.Add(new Id(0x0C), "12");
+        dictionary.Add(new Id(0x11), "17");
+        dictionary.Add(new Id(0x13), "19");
+        dictionary.Add(new Id(0x12), "18");
+        dictionary.Add(new Id(0x14), "20");
+        dictionary.Add(new Id(0x0E), "14");
+        dictionary.Add(new Id(0x18), "24");
+        dictionary.Add(new Id(0x03), "3");
+        dictionary.Add(new Id(0x04), "4");
+        dictionary.Add(new Id(0x00), "0");
+        dictionary.Add(new Id(0x01), "1");
+        dictionary.Add(new Id(0x07), "7");
+        dictionary.Add(new Id(0x06), "6");
+        
+        Assert.IsTrue(dictionary.TryGetValue(new Id(0x0D), out var value));
+        Assert.AreEqual("13", value);
+        Assert.IsTrue(dictionary.TryGetValue(new Id(0x0F), out value));
+        Assert.AreEqual("15", value);
+        Assert.IsTrue(dictionary.TryGetValue(new Id(0x0C), out value));
+        Assert.AreEqual("12", value);
+        Assert.IsTrue(dictionary.TryGetValue(new Id(0x11), out value));
+        Assert.AreEqual("17", value);
+        Assert.IsTrue(dictionary.TryGetValue(new Id(0x13), out value));
+        Assert.AreEqual("19", value);
+        Assert.IsTrue(dictionary.TryGetValue(new Id(0x12), out value));
+        Assert.AreEqual("18", value);
+        Assert.IsTrue(dictionary.TryGetValue(new Id(0x14), out value));
+        Assert.AreEqual("20", value);
+        Assert.IsTrue(dictionary.TryGetValue(new Id(0x0E), out value));
+        Assert.AreEqual("14", value);
+        Assert.IsTrue(dictionary.TryGetValue(new Id(0x18), out value));
+        Assert.AreEqual("24", value);
+        Assert.IsTrue(dictionary.TryGetValue(new Id(0x03), out value));
+        Assert.AreEqual("3", value);
+        Assert.IsTrue(dictionary.TryGetValue(new Id(0x04), out value));
+        Assert.AreEqual("4", value);
+        Assert.IsTrue(dictionary.TryGetValue(new Id(0x00), out value));
+        Assert.AreEqual("0", value);
+        Assert.IsTrue(dictionary.TryGetValue(new Id(0x01), out value));
+        Assert.AreEqual("1", value);
+        Assert.IsTrue(dictionary.TryGetValue(new Id(0x07), out value));
+        Assert.AreEqual("7", value);
+        Assert.IsTrue(dictionary.TryGetValue(new Id(0x06), out value));
+        Assert.AreEqual("6", value);
+    }
+
     [TestMethod]
     public void AddressEqualityTest()
     {
@@ -214,7 +285,7 @@ public class IdTests
             var idProvider = new EmptyIdProvider();
             var idGenerator = new IdGenerator(addressSize);
             var id = GenerateId(idGenerator, idProvider);
-            var fancyIdStr = id.ToString(true);
+            var fancyIdStr = id.ToString();
             var idFromFancyStr = new Id(fancyIdStr);
             Assert.AreEqual(id, idFromFancyStr);
 

@@ -48,7 +48,11 @@ namespace cpGames.core
         /// <param name="includeSelf">Include searched type in return value</param>
         /// <param name="includeAbstract">Include abstract types in return value</param>
         /// <returns>Enumeration of all derived types</returns>
-        public static IEnumerable<Type> FindAllDerivedTypes(this Type type, Assembly? assembly = null, bool includeSelf = false, bool includeAbstract = false)
+        public static IEnumerable<Type> FindAllDerivedTypes(
+            this Type type,
+            Assembly? assembly = null,
+            bool includeSelf = false,
+            bool includeAbstract = false)
         {
             if (assembly == null)
             {
@@ -56,10 +60,34 @@ namespace cpGames.core
             }
             return assembly
                 .GetTypes()
-                .Where(t =>
-                    (includeSelf || t != type) &&
-                    (includeAbstract || !t.IsAbstract) &&
-                    type.IsAssignableFrom(t));
+                .Where(
+                    t =>
+                        (includeSelf || t != type) &&
+                        (includeAbstract || !t.IsAbstract) &&
+                        type.IsAssignableFrom(t));
+        }
+
+        /// <summary>
+        /// Find all derived types of a base class.
+        /// </summary>
+        /// <param name="type">Type of base class to search</param>
+        /// <param name="assemblies">Assemblies to search</param>
+        /// <param name="includeSelf">Include searched type in return value</param>
+        /// <param name="includeAbstract">Include abstract types in return value</param>
+        /// <returns>Enumeration of all derived types</returns>
+        public static IEnumerable<Type> FindAllDerivedTypes(
+            this Type type,
+            IEnumerable<Assembly> assemblies,
+            bool includeSelf = false,
+            bool includeAbstract = false)
+        {
+            return assemblies
+                .SelectMany(a => a.GetTypes())
+                .Where(
+                    t =>
+                        (includeSelf || t != type) &&
+                        (includeAbstract || !t.IsAbstract) &&
+                        type.IsAssignableFrom(t));
         }
 
         /// <summary>
@@ -72,7 +100,77 @@ namespace cpGames.core
         /// <returns>Enumeration of all derived types</returns>
         public static IEnumerable<Type> FindAllDerivedTypes<T>(Assembly? assembly = null, bool includeSelf = false, bool includeAbstract = false)
         {
-            return FindAllDerivedTypes(typeof(T), assembly, includeSelf, includeAbstract);
+            return FindAllDerivedTypes(
+                typeof(T),
+                assembly,
+                includeSelf,
+                includeAbstract);
+        }
+
+        /// <summary>
+        /// Find all derived types of a base class (generic).
+        /// </summary>
+        /// <typeparam name="T">Type of base class to search</typeparam>
+        /// <param name="assemblies">Assemblies to search</param>
+        /// <param name="includeSelf">Include searched type in return value</param>
+        /// <param name="includeAbstract">Include abstract types in return value</param>
+        /// <returns>Enumeration of all derived types</returns>
+        public static IEnumerable<Type> FindAllDerivedTypes<T>(IEnumerable<Assembly> assemblies, bool includeSelf = false, bool includeAbstract = false)
+        {
+            return FindAllDerivedTypes(
+                typeof(T),
+                assemblies,
+                includeSelf,
+                includeAbstract);
+        }
+
+        /// <summary>
+        /// Find all related non-abstract types of a base class.
+        /// </summary>
+        /// <param name="type">Type of base class to search</param>
+        /// <param name="assembly">Assembly to search (if null use type's assembly)</param>
+        /// <returns>Enumeration of all related types</returns>
+        public static IEnumerable<Type> FindAllRelatedTypes(this Type type, Assembly assembly)
+        {
+            var types = new List<Type>();
+            if (!type.IsAbstract)
+            {
+                types.Add(type);
+            }
+            foreach (var derivedType in assembly
+                         .GetTypes()
+                         .Where(t => t != type && type.IsAssignableFrom(t)))
+            {
+                types.AddRange(derivedType.FindAllRelatedTypes(assembly));
+            }
+            return types;
+        }
+
+        /// <summary>
+        /// Find all related non-abstract types of a base class.
+        /// </summary>
+        /// <param name="type">Type of base class to search</param>
+        /// <param name="assemblies">Assemblies to search</param>
+        /// <returns>Enumeration of all related types</returns>
+        public static IEnumerable<Type> FindAllRelatedTypes(this Type type, IEnumerable<Assembly> assemblies)
+        {
+            var types = new List<Type>();
+            foreach (var assembly in assemblies)
+            {
+                types.AddRange(type.FindAllRelatedTypes(assembly));
+            }
+            return types;
+        }
+
+        /// <summary>
+        /// Find all related non-abstract types of a base class.
+        /// </summary>
+        /// <param name="type">Type of base class to search</param>
+        /// <returns>Enumeration of all related types</returns>
+        public static IEnumerable<Type> FindAllRelatedTypes(this Type type)
+        {
+            var assembly = Assembly.GetAssembly(type);
+            return type.FindAllRelatedTypes(assembly);
         }
 
         /// <summary>
@@ -118,9 +216,14 @@ namespace cpGames.core
         /// <param name="data">Method parameter array (null for parameterless method)</param>
         /// <param name="t">Parameter types, must be in the same order as values in parameter array</param>
         /// <returns>Method's return value if not void</returns>
-        public static object InvokeGenericStaticMethod(Type objectType, string methodName, object[]? data = null, params Type[] t)
+        public static object InvokeGenericStaticMethod(
+            Type objectType,
+            string methodName,
+            object[]? data = null,
+            params Type[] t)
         {
-            var method = objectType.GetMethod(methodName,
+            var method = objectType.GetMethod(
+                methodName,
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
             if (method == null)
             {
@@ -138,9 +241,17 @@ namespace cpGames.core
         /// <param name="data">Method's parameter</param>
         /// <param name="t">Parameter type</param>
         /// <returns>Method's return value if not void</returns>
-        public static object InvokeGenericStaticMethod(Type objectType, string methodName, object data, Type t)
+        public static object InvokeGenericStaticMethod(
+            Type objectType,
+            string methodName,
+            object data,
+            Type t)
         {
-            return InvokeGenericStaticMethod(objectType, methodName, new[] { data }, t);
+            return InvokeGenericStaticMethod(
+                objectType,
+                methodName,
+                new[] { data },
+                t);
         }
 
         /// <summary>
@@ -154,7 +265,11 @@ namespace cpGames.core
         public static object InvokeGenericStaticMethod<T>(string methodName, object[]? data = null, params Type[] t)
         {
             var objectType = typeof(T);
-            return InvokeGenericStaticMethod(objectType, methodName, data, t);
+            return InvokeGenericStaticMethod(
+                objectType,
+                methodName,
+                data,
+                t);
         }
 
         /// <summary>
@@ -178,9 +293,14 @@ namespace cpGames.core
         /// <param name="data">Method parameter array (null for parameterless method)</param>
         /// <param name="t">Parameter types, must be in the same order as values in parameter array</param>
         /// <returns>Method's return value if not void</returns>
-        public static object InvokeGenericMethod(object source, string methodName, object[]? data = null, params Type[] t)
+        public static object InvokeGenericMethod(
+            object source,
+            string methodName,
+            object[]? data = null,
+            params Type[] t)
         {
-            var method = source.GetType().GetMethod(methodName,
+            var method = source.GetType().GetMethod(
+                methodName,
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             var generic = method.MakeGenericMethod(t);
             return generic.Invoke(source, data);
@@ -194,9 +314,17 @@ namespace cpGames.core
         /// <param name="data">Method's parameter</param>
         /// <param name="t">Parameter type</param>
         /// <returns>Method's return value if not void</returns>
-        public static object InvokeGenericMethod(object source, string methodName, object data, Type t)
+        public static object InvokeGenericMethod(
+            object source,
+            string methodName,
+            object data,
+            Type t)
         {
-            return InvokeGenericMethod(source, methodName, new[] { data }, t);
+            return InvokeGenericMethod(
+                source,
+                methodName,
+                new[] { data },
+                t);
         }
 
         /// <summary>
@@ -208,7 +336,8 @@ namespace cpGames.core
         /// <returns>Method's return value if not void</returns>
         public static object InvokeStaticMethod(Type objectType, string methodName, object[]? data = null)
         {
-            var method = objectType.GetMethod(methodName,
+            var method = objectType.GetMethod(
+                methodName,
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
             return method.Invoke(null, data);
         }
@@ -259,7 +388,8 @@ namespace cpGames.core
         /// <returns>Method's return value if not void</returns>
         public static object InvokeMethod(object source, string methodName, object[]? data = null)
         {
-            var method = source.GetType().GetMethod(methodName,
+            var method = source.GetType().GetMethod(
+                methodName,
                 BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             return method.Invoke(source, data);
         }
