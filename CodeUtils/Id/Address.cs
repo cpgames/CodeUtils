@@ -240,6 +240,11 @@ namespace cpGames.core
             return new Id(bytes);
         }
 
+        public Id GetFirstId()
+        {
+            return GetId(0);
+        }
+
         public Id GetLastId()
         {
             return GetId(IdCount - 1);

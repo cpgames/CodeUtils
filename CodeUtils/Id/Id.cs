@@ -6,7 +6,7 @@ namespace cpGames.core
     /// <summary>
     /// Represents a unique Id used with object collections.
     /// Can be serialized.
-    /// Generated with <see cref="IdGenerator"/>
+    /// Generated with <see cref="IdGenerator" />
     /// </summary>
     public readonly struct Id
     {

@@ -6,7 +6,7 @@ namespace cpGames.core
     /// <summary>
     /// Simple implementation of IIdProvider
     /// </summary>
-    public class IdContainer : IIdProvider
+    public class IdContainer : IIdProvider, IIdGenerator
     {
         #region Fields
         protected readonly object _syncRoot = new();
@@ -25,6 +25,15 @@ namespace cpGames.core
         }
         #endregion
 
+        #region IIdGenerator Members
+        public Outcome GenerateId(out Id id)
+        {
+            return
+                _generator.GenerateId(this, out id) &&
+                AddId(id);
+        }
+        #endregion
+
         #region IIdProvider Members
         public byte IdSize { get; }
 
@@ -38,13 +47,6 @@ namespace cpGames.core
         #endregion
 
         #region Methods
-        public Outcome GenerateId(out Id id)
-        {
-            return
-                _generator.GenerateId(this, out id) &&
-                AddId(id);
-        }
-
         public Outcome AddId(Id id)
         {
             lock (_syncRoot)
