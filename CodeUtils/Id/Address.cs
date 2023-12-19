@@ -79,7 +79,7 @@ namespace cpGames.core
 
         public Address(string str)
         {
-            var idTokens = str.Split('/');
+            var idTokens = str.Split(':');
             var ids = new List<Id>();
             var size = idTokens.Length;
             foreach (var idToken in idTokens)
@@ -317,7 +317,7 @@ namespace cpGames.core
 
         public override string ToString()
         {
-            return !IsValid ? string.Empty : GetIds().ToString("/");
+            return !IsValid ? string.Empty : GetIds().ToString(":");
         }
 
         public static object Deserialize(byte[] data)
