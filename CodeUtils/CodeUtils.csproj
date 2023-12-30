@@ -13,6 +13,7 @@
     <RepositoryUrl>https://github.com/cpgames/CodeUtils.git</RepositoryUrl>
     <PackageTags>c#; code extensions; singleton; Id; Address; IdGenerator</PackageTags>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
