@@ -26,11 +26,14 @@ namespace cpGames.core
         #endregion
 
         #region IIdGenerator Members
-        public Outcome GenerateId(out Id id)
+        public Outcome GenerateId(out Id id, bool add = true)
         {
-            return
-                _generator.GenerateId(this, out id) &&
-                AddId(id);
+            var generateOutcome = _generator.GenerateId(this, out id);
+            if (!generateOutcome)
+            {
+                return generateOutcome;
+            }
+            return add ? AddId(id) : Outcome.Success();
         }
         #endregion
 
@@ -53,7 +56,7 @@ namespace cpGames.core
             {
                 return _ids.Add(id) ?
                     Outcome.Success() :
-                    Outcome.Fail($"Id <{id}> already exists.");
+                    Outcome.Fail($"Id <{id}> already exists.", this);
             }
         }
 
@@ -63,7 +66,7 @@ namespace cpGames.core
             {
                 return _ids.Remove(id) ?
                     Outcome.Success() :
-                    Outcome.Fail($"Id <{id}> does not exist.");
+                    Outcome.Fail($"Id <{id}> does not exist.", this);
             }
         }
         #endregion

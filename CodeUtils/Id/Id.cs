@@ -69,6 +69,29 @@ namespace cpGames.core
         [DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern int memcpy(byte[] dest, byte[] src, long count);
 
+        public static Outcome TryParse(string str, out Id id)
+        {
+            id = INVALID;
+            if (str.Length == 0)
+            {
+                return Outcome.Fail("Id string is empty", null);
+            }
+            if (str.Length % 2 != 0)
+            {
+                return Outcome.Fail("Id string is not a multiple of 2", null);
+            }
+            try
+            {
+                id = new Id(str);
+            }
+            catch (Exception e)
+            {
+                return Outcome.Fail(e.Message, null);
+            }
+
+            return Outcome.Success();
+        }
+
         private bool Equals(Id other)
         {
             if (Bytes == null && other.Bytes == null)
