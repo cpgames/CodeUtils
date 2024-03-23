@@ -1,4 +1,7 @@
-﻿namespace cpGames.core
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace cpGames.core
 {
     /// <summary>
     /// A useful construct for returning function success or failure with an attached error message.
@@ -29,38 +32,63 @@
     public readonly struct Outcome
     {
         #region Fields
-        private static readonly Outcome EMPTY_FAIL = new(false, string.Empty);
-        private static readonly Outcome EMPTY_SUCCESS = new(true, string.Empty);
+        private static readonly Outcome EMPTY_FAIL = new(false, string.Empty, (object?)null);
+        private static readonly Outcome EMPTY_SUCCESS = new(true, string.Empty, (object?)null);
         #endregion
 
         #region Properties
-        public bool IsSuccess { get;  }
-        public string ErrorMessage { get;  }
+        public bool IsSuccess { get; }
+        public string ErrorMessage { get; }
+        public List<object> Sources { get; }
         #endregion
 
         #region Constructors
-        private Outcome(bool success, string errorMessage)
+        private Outcome(bool success, string errorMessage, object? source)
         {
             IsSuccess = success;
             ErrorMessage = errorMessage;
+            Sources = new List<object>();
+            if (source != null)
+            {
+                Sources.Add(source);
+            }
+        }
+
+        private Outcome(bool success, string errorMessage, List<object> sources)
+        {
+            IsSuccess = success;
+            ErrorMessage = errorMessage;
+            Sources = sources;
         }
         #endregion
 
         #region Methods
+        public Outcome Append(object source)
+        {
+            if (IsSuccess)
+            {
+                return this;
+            }
+            if (Sources.LastOrDefault() == source)
+            {
+                return this;
+            }
+            var newSources = new List<object>(Sources)
+            {
+                source
+            };
+            return new Outcome(IsSuccess, ErrorMessage, newSources);
+        }
         private bool Equals(Outcome other)
         {
             return IsSuccess == other.IsSuccess;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (ReferenceEquals(null, obj))
+            if (obj is null)
             {
                 return false;
-            }
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
             }
             if (obj.GetType() != GetType())
             {
@@ -94,7 +122,8 @@
             {
                 return b;
             }
-            return Fail($"{a.ErrorMessage}\n{b.ErrorMessage}");
+            var newSources = new List<object> { a.Sources, b.Sources };
+            return new Outcome(false, $"{a.ErrorMessage}\n{b.ErrorMessage}", newSources);
         }
 
         public static bool operator ==(Outcome a, Outcome b)
@@ -127,9 +156,9 @@
             return EMPTY_SUCCESS;
         }
 
-        public static Outcome Fail(string errorMessage)
+        public static Outcome Fail(string errorMessage, object? source)
         {
-            return new Outcome(false, errorMessage);
+            return new Outcome(false, errorMessage, source);
         }
 
         public static Outcome Fail()

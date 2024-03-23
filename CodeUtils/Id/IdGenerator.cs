@@ -49,7 +49,7 @@ namespace cpGames.core
                 if (_retries == 0)
                 {
                     id = Id.INVALID;
-                    return Outcome.Fail("Generating random id timed out.");
+                    return Outcome.Fail("Generating random id timed out.", this);
                 }
                 return Outcome.Success();
             }
