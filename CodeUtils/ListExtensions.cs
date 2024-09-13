@@ -6,7 +6,7 @@ using System.Linq;
 namespace cpGames.core
 {
     /// <summary>
-    /// A set of useful extension methods for working with Lists and Arrays.
+    ///     A set of useful extension methods for working with Lists and Arrays.
     /// </summary>
     public static class ListExtensions
     {
@@ -63,6 +63,11 @@ namespace cpGames.core
         {
             var index = new Random(Guid.NewGuid().GetHashCode()).Next(0, source.Count);
             return source[index];
+        }
+
+        public static List<T> SortInRandomOrder<T>(this List<T> source)
+        {
+            return source.OrderBy(_ => Guid.NewGuid()).ToList();
         }
         #endregion
     }
