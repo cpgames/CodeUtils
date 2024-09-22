@@ -6,14 +6,14 @@ using System.Reflection;
 namespace cpGames.core
 {
     /// <summary>
-    /// A set of useful extension methods for working with C# Reflection.
+    ///     A set of useful extension methods for working with C# Reflection.
     /// </summary>
     public static class ReflectionExtensions
     {
         #region Methods
         /// <summary>
-        /// Get element type of a collection.
-        /// Unlike default GetElementType, drills into base classes to find first base class that is a collection.
+        ///     Get element type of a collection.
+        ///     Unlike default GetElementType, drills into base classes to find first base class that is a collection.
         /// </summary>
         /// <param name="type">Type to search</param>
         /// <returns>Element type if found, otherwise null</returns>
@@ -31,7 +31,7 @@ namespace cpGames.core
         }
 
         /// <summary>
-        /// Checks if type is a struct.
+        ///     Checks if type is a struct.
         /// </summary>
         /// <param name="type">Type to check</param>
         /// <returns>True if a struct, otherwise False</returns>
@@ -41,7 +41,7 @@ namespace cpGames.core
         }
 
         /// <summary>
-        /// Find all derived types of a base class.
+        ///     Find all derived types of a base class.
         /// </summary>
         /// <param name="type">Type of base class to search</param>
         /// <param name="assembly">Assembly to search (if null use type's assembly)</param>
@@ -68,7 +68,7 @@ namespace cpGames.core
         }
 
         /// <summary>
-        /// Find all derived types of a base class.
+        ///     Find all derived types of a base class.
         /// </summary>
         /// <param name="type">Type of base class to search</param>
         /// <param name="assemblies">Assemblies to search</param>
@@ -91,7 +91,7 @@ namespace cpGames.core
         }
 
         /// <summary>
-        /// Find all derived types of a base class (generic).
+        ///     Find all derived types of a base class (generic).
         /// </summary>
         /// <typeparam name="T">Type of base class to search</typeparam>
         /// <param name="assembly">Assembly to search (if null use type's assembly)</param>
@@ -108,7 +108,7 @@ namespace cpGames.core
         }
 
         /// <summary>
-        /// Find all derived types of a base class (generic).
+        ///     Find all derived types of a base class (generic).
         /// </summary>
         /// <typeparam name="T">Type of base class to search</typeparam>
         /// <param name="assemblies">Assemblies to search</param>
@@ -125,7 +125,7 @@ namespace cpGames.core
         }
 
         /// <summary>
-        /// Find all related non-abstract types of a base class.
+        ///     Find all related non-abstract types of a base class.
         /// </summary>
         /// <param name="type">Type of base class to search</param>
         /// <param name="assembly">Assembly to search (if null use type's assembly)</param>
@@ -147,7 +147,7 @@ namespace cpGames.core
         }
 
         /// <summary>
-        /// Find all related non-abstract types of a base class.
+        ///     Find all related non-abstract types of a base class.
         /// </summary>
         /// <param name="type">Type of base class to search</param>
         /// <param name="assemblies">Assemblies to search</param>
@@ -163,7 +163,7 @@ namespace cpGames.core
         }
 
         /// <summary>
-        /// Find all related non-abstract types of a base class.
+        ///     Find all related non-abstract types of a base class.
         /// </summary>
         /// <param name="type">Type of base class to search</param>
         /// <returns>Enumeration of all related types</returns>
@@ -174,7 +174,7 @@ namespace cpGames.core
         }
 
         /// <summary>
-        /// Check if type is derived from base type or is base type.
+        ///     Check if type is derived from base type or is base type.
         /// </summary>
         /// <param name="derivedType">Type to check</param>
         /// <param name="baseType">Base type</param>
@@ -182,12 +182,12 @@ namespace cpGames.core
         public static bool IsTypeOrDerived(this Type derivedType, Type baseType)
         {
             return baseType == derivedType ||
-                derivedType.IsSubclassOf(baseType) ||
-                baseType.IsAssignableFrom(derivedType);
+                   derivedType.IsSubclassOf(baseType) ||
+                   baseType.IsAssignableFrom(derivedType);
         }
 
         /// <summary>
-        /// Check if instance type is derived from base instance type or is base instance type.
+        ///     Check if instance type is derived from base instance type or is base instance type.
         /// </summary>
         /// <param name="baseObj">Base object instance</param>
         /// <param name="derivedObj">Derived object instance</param>
@@ -198,7 +198,7 @@ namespace cpGames.core
         }
 
         /// <summary>
-        /// heck if instance type is derived from base type or is base type.
+        ///     heck if instance type is derived from base type or is base type.
         /// </summary>
         /// <param name="baseType">Base type</param>
         /// <param name="derivedObj">Derived object instance</param>
@@ -209,7 +209,7 @@ namespace cpGames.core
         }
 
         /// <summary>
-        /// Invoke static generic method in a class.
+        ///     Invoke static generic method in a class.
         /// </summary>
         /// <param name="objectType">Object type containing the method to invoke</param>
         /// <param name="methodName">Method name to invoke</param>
@@ -234,7 +234,7 @@ namespace cpGames.core
         }
 
         /// <summary>
-        /// Invoke generic static method in a class (with a single parameter).
+        ///     Invoke generic static method in a class (with a single parameter).
         /// </summary>
         /// <param name="objectType">Object type containing the method to invoke</param>
         /// <param name="methodName">Method name to invoke</param>
@@ -255,7 +255,7 @@ namespace cpGames.core
         }
 
         /// <summary>
-        /// Invoke static generic method in a class (generic).
+        ///     Invoke static generic method in a class (generic).
         /// </summary>
         /// <typeparam name="T">Object type containing the method to invoke</typeparam>
         /// <param name="methodName">Method name to invoke</param>
@@ -273,7 +273,7 @@ namespace cpGames.core
         }
 
         /// <summary>
-        /// Invoke static generic method in a class (generic with a single parameter).
+        ///     Invoke static generic method in a class (generic with a single parameter).
         /// </summary>
         /// <typeparam name="T">Object type containing the method to invoke</typeparam>
         /// <param name="methodName">Method name to invoke</param>
@@ -286,7 +286,7 @@ namespace cpGames.core
         }
 
         /// <summary>
-        /// Invoke static generic method in a class.
+        ///     Invoke static generic method in a class.
         /// </summary>
         /// <param name="source">Object instance containing the method to invoke</param>
         /// <param name="methodName">Method name to invoke</param>
@@ -307,7 +307,7 @@ namespace cpGames.core
         }
 
         /// <summary>
-        /// Invoke generic instance method in a class (with a single parameter).
+        ///     Invoke generic instance method in a class (with a single parameter).
         /// </summary>
         /// <param name="source">Object instance containing the method to invoke</param>
         /// <param name="methodName">Method name to invoke</param>
@@ -328,7 +328,7 @@ namespace cpGames.core
         }
 
         /// <summary>
-        /// Invoke static method in a class.
+        ///     Invoke static method in a class.
         /// </summary>
         /// <param name="objectType">Object type containing the method to invoke</param>
         /// <param name="methodName">Method name to invoke</param>
@@ -343,7 +343,7 @@ namespace cpGames.core
         }
 
         /// <summary>
-        /// Invoke static method in a class (with a single parameter).
+        ///     Invoke static method in a class (with a single parameter).
         /// </summary>
         /// <param name="objectType">Object type containing the method to invoke</param>
         /// <param name="methodName">Method name to invoke</param>
@@ -355,7 +355,7 @@ namespace cpGames.core
         }
 
         /// <summary>
-        /// Invoke static static method in a class (generic).
+        ///     Invoke static static method in a class (generic).
         /// </summary>
         /// <typeparam name="T">Object type containing the method to invoke</typeparam>
         /// <param name="methodName">Method name to invoke</param>
@@ -368,7 +368,7 @@ namespace cpGames.core
         }
 
         /// <summary>
-        /// Invoke static method in a class (generic with a single parameter).
+        ///     Invoke static method in a class (generic with a single parameter).
         /// </summary>
         /// <typeparam name="T">Object type containing the method to invoke</typeparam>
         /// <param name="methodName">Method name to invoke</param>
@@ -380,7 +380,7 @@ namespace cpGames.core
         }
 
         /// <summary>
-        /// Invoke instance method in a class.
+        ///     Invoke instance method in a class.
         /// </summary>
         /// <param name="source">Object instance containing the method to invoke</param>
         /// <param name="methodName">Method name to invoke</param>
@@ -395,7 +395,7 @@ namespace cpGames.core
         }
 
         /// <summary>
-        /// Invoke instance method in a class (with a single parameter).
+        ///     Invoke instance method in a class (with a single parameter).
         /// </summary>
         /// <param name="source">Object instance containing the method to invoke</param>
         /// <param name="methodName">Method name to invoke</param>
@@ -407,7 +407,7 @@ namespace cpGames.core
         }
 
         /// <summary>
-        /// Get member attribute of type T.
+        ///     Get member attribute of type T.
         /// </summary>
         /// <typeparam name="T">Attribute type to search for</typeparam>
         /// <param name="member">Member to search, can be type, field, property, or method</param>
@@ -419,7 +419,7 @@ namespace cpGames.core
         }
 
         /// <summary>
-        /// Get all member attributes of type T.
+        ///     Get all member attributes of type T.
         /// </summary>
         /// <typeparam name="T">Attribute type to search for</typeparam>
         /// <param name="member">Member to search, can be type, field, property, or method</param>
@@ -431,7 +431,7 @@ namespace cpGames.core
         }
 
         /// <summary>
-        /// Check if member has an attribute of type T
+        ///     Check if member has an attribute of type T
         /// </summary>
         /// <typeparam name="T">Attribute type to search for</typeparam>
         /// <param name="member">Member to search, can be type, field, property, or method</param>
@@ -442,7 +442,7 @@ namespace cpGames.core
         }
 
         /// <summary>
-        /// Check if generic type has a generic argument of specified type.
+        ///     Check if generic type has a generic argument of specified type.
         /// </summary>
         /// <param name="type">Generic type</param>
         /// <param name="argType">Argument type</param>
@@ -451,11 +451,11 @@ namespace cpGames.core
         {
             var args = type.GetGenericArguments();
             return args.Any(att => att == argType) ||
-                (type.BaseType != null && type.BaseType.HasGenericArgument(argType));
+                   (type.BaseType != null && type.BaseType.HasGenericArgument(argType));
         }
 
         /// <summary>
-        /// Check if generic type has a generic argument of specified type (generic).
+        ///     Check if generic type has a generic argument of specified type (generic).
         /// </summary>
         /// <typeparam name="T">Argument type</typeparam>
         /// <param name="type">Generic type</param>
@@ -466,17 +466,37 @@ namespace cpGames.core
         }
 
         /// <summary>
-        /// Traverse inheritance hierarchy to find first type with generic arguments and return them.
+        ///     Traverse inheritance hierarchy to find first type with generic arguments and return them.
         /// </summary>
         /// <param name="type">
-        /// Type to search, if generic it's arguments will be returned, otherwise it's base class will be
-        /// searched recursively
+        ///     Type to search, if generic it's arguments will be returned, otherwise it's base class will be
+        ///     searched recursively
         /// </param>
         /// <returns>Array of generic types, null if none were found</returns>
         public static Type[]? GetGenericArgumentsEx(this Type type)
         {
             var args = type.GetGenericArguments();
-            return args.Length > 0 ? args : type.BaseType?.GetGenericArgumentsEx();
+            return args.Length > 0 ?
+                args :
+                type.BaseType?.GetGenericArgumentsEx();
+        }
+
+        /// <summary>
+        ///     Find a type by name in all loaded assemblies.
+        /// </summary>
+        /// <param name="typeName">Type name to search for</param>
+        /// <returns>Type if found, otherwise null</returns>
+        public static Type? GetTypeByName(string typeName)
+        {
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                var type = assembly.GetTypes().FirstOrDefault(t => t.Name == typeName);
+                if (type != null)
+                {
+                    return type;
+                }
+            }
+            return null;
         }
         #endregion
     }
