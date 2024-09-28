@@ -4,42 +4,41 @@ using System.Runtime.InteropServices;
 namespace cpGames.core
 {
     /// <summary>
-    /// Represents a unique Id used with object collections.
-    /// Can be serialized.
-    /// Generated with <see cref="IdGenerator" />
+    ///     Represents a unique Id used with object collections.
+    ///     Can be serialized.
+    ///     Generated with <see cref="IdGenerator" />
     /// </summary>
     public readonly struct Id
     {
         #region Fields
         public static Id INVALID = new();
-        private readonly byte[]? _bytes;
         #endregion
 
         #region Properties
-        public byte Length => (byte)(_bytes?.Length ?? 0);
+        public byte Length => (byte)(Bytes?.Length ?? 0);
         public bool IsValid => Bytes is { Length: > 0 };
-        public byte[]? Bytes => _bytes;
+        public byte[]? Bytes { get; }
         #endregion
 
         #region Constructors
         public Id(params byte[] bytes)
         {
-            _bytes = bytes;
+            Bytes = bytes;
         }
 
         public Id(Id other)
         {
             if (other.IsValid)
             {
-                _bytes = new byte[other._bytes!.Length];
-                for (var i = 0; i < other._bytes.Length; i++)
+                Bytes = new byte[other.Bytes!.Length];
+                for (var i = 0; i < other.Bytes.Length; i++)
                 {
-                    _bytes[i] = other._bytes[i];
+                    Bytes[i] = other.Bytes[i];
                 }
             }
             else
             {
-                _bytes = null;
+                Bytes = null;
             }
         }
 
@@ -47,16 +46,16 @@ namespace cpGames.core
         {
             if (str.Length == 0)
             {
-                _bytes = null;
+                Bytes = null;
             }
             else
             {
-                _bytes = new byte[str.Length / 2];
+                Bytes = new byte[str.Length / 2];
                 for (var i = 0; i < str.Length; i += 2)
                 {
                     var byteStr = str.Substring(i, 2);
                     var b = Convert.ToByte(byteStr, 16);
-                    _bytes[i / 2] = b;
+                    Bytes[i / 2] = b;
                 }
             }
         }
@@ -72,9 +71,9 @@ namespace cpGames.core
         public static Outcome TryParse(string str, out Id id)
         {
             id = INVALID;
-            if (str.Length == 0)
+            if (str.Length == 0 || str == "0")
             {
-                return Outcome.Fail("Id string is empty", null);
+                return Outcome.Success();
             }
             if (str.Length % 2 != 0)
             {
@@ -112,7 +111,9 @@ namespace cpGames.core
 
         public byte GetLastByte()
         {
-            return Bytes != null ? Bytes[Bytes.Length - 1] : (byte)0;
+            return Bytes != null ?
+                Bytes[Bytes.Length - 1] :
+                (byte)0;
         }
 
         public override bool Equals(object obj)
