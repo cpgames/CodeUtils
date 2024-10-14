@@ -56,7 +56,7 @@ namespace cpGames.core
             {
                 return _ids.Add(id) ?
                     Outcome.Success() :
-                    Outcome.Fail($"Id <{id}> already exists.", this);
+                    Outcome.Fail($"Id <{id}> already exists.");
             }
         }
 
@@ -66,7 +66,7 @@ namespace cpGames.core
             {
                 return _ids.Remove(id) ?
                     Outcome.Success() :
-                    Outcome.Fail($"Id <{id}> does not exist.", this);
+                    Outcome.Fail($"Id <{id}> does not exist.");
             }
         }
         #endregion

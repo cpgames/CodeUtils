@@ -77,7 +77,7 @@ namespace cpGames.core
             }
             if (str.Length % 2 != 0)
             {
-                return Outcome.Fail("Id string is not a multiple of 2", null);
+                return Outcome.Fail("Id string is not a multiple of 2");
             }
             try
             {
@@ -85,7 +85,7 @@ namespace cpGames.core
             }
             catch (Exception e)
             {
-                return Outcome.Fail(e.Message, null);
+                return Outcome.Fail(e.Message);
             }
 
             return Outcome.Success();

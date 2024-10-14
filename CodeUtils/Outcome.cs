@@ -1,14 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Diagnostics;
 
 namespace cpGames.core
 {
     /// <summary>
-    /// A useful construct for returning function success or failure with an attached error message.
-    /// Can be chained using '&amp;&amp;' or '||' operators.
-    /// <para />
-    /// Example:
-    /// <code>
+    ///     A useful construct for returning function success or failure with an attached error message.
+    ///     Can be chained using '&amp;&amp;' or '||' operators.
+    ///     <para />
+    ///     Example:
+    ///     <code>
     /// Outcome IsPositive(int n)
     /// {
     ///     if (n > 0)
@@ -32,53 +31,26 @@ namespace cpGames.core
     public readonly struct Outcome
     {
         #region Fields
-        private static readonly Outcome EMPTY_FAIL = new(false, string.Empty, (object?)null);
-        private static readonly Outcome EMPTY_SUCCESS = new(true, string.Empty, (object?)null);
+        private static readonly Outcome EMPTY_SUCCESS = new(true, string.Empty);
+        private static readonly Outcome EMPTY_FAIL = new(false, string.Empty);
         #endregion
 
         #region Properties
         public bool IsSuccess { get; }
         public string ErrorMessage { get; }
-        public List<object> Sources { get; }
+        public string StackTrace { get; }
         #endregion
 
         #region Constructors
-        private Outcome(bool success, string errorMessage, object? source)
+        private Outcome(bool success, string errorMessage, string stackTrace = "")
         {
             IsSuccess = success;
             ErrorMessage = errorMessage;
-            Sources = new List<object>();
-            if (source != null)
-            {
-                Sources.Add(source);
-            }
-        }
-
-        private Outcome(bool success, string errorMessage, List<object> sources)
-        {
-            IsSuccess = success;
-            ErrorMessage = errorMessage;
-            Sources = sources;
+            StackTrace = stackTrace;
         }
         #endregion
 
         #region Methods
-        public Outcome Append(object source)
-        {
-            if (IsSuccess)
-            {
-                return this;
-            }
-            if (Sources.LastOrDefault() == source)
-            {
-                return this;
-            }
-            var newSources = new List<object>(Sources)
-            {
-                source
-            };
-            return new Outcome(IsSuccess, ErrorMessage, newSources);
-        }
         private bool Equals(Outcome other)
         {
             return IsSuccess == other.IsSuccess;
@@ -122,8 +94,8 @@ namespace cpGames.core
             {
                 return b;
             }
-            var newSources = new List<object> { a.Sources, b.Sources };
-            return new Outcome(false, $"{a.ErrorMessage}\n{b.ErrorMessage}", newSources);
+            var combinedStackTrace = $"{a.StackTrace}\n{b.StackTrace}";
+            return new Outcome(false, $"{a.ErrorMessage}\n{b.ErrorMessage}", combinedStackTrace);
         }
 
         public static bool operator ==(Outcome a, Outcome b)
@@ -148,7 +120,7 @@ namespace cpGames.core
 
         public override string ToString()
         {
-            return ErrorMessage;
+            return $"{ErrorMessage}\n{StackTrace}";
         }
 
         public static Outcome Success()
@@ -156,9 +128,10 @@ namespace cpGames.core
             return EMPTY_SUCCESS;
         }
 
-        public static Outcome Fail(string errorMessage, object? source)
+        public static Outcome Fail(string errorMessage)
         {
-            return new Outcome(false, errorMessage, source);
+            var stackTrace = new StackTrace(1, true);
+            return new Outcome(false, errorMessage, stackTrace.ToString());
         }
 
         public static Outcome Fail()
