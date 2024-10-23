@@ -8,7 +8,7 @@ namespace cpGames.core
     ///     Can be serialized.
     ///     Generated with <see cref="IdGenerator" />
     /// </summary>
-    public readonly struct Id
+    public readonly struct Id : IComparable<Id>
     {
         #region Fields
         public static Id INVALID = new();
@@ -179,6 +179,32 @@ namespace cpGames.core
         {
             var id = (Id)obj;
             return id.Bytes;
+        }
+
+        public int CompareTo(Id other)
+        {
+            if (Bytes == null && other.Bytes == null)
+            {
+                return 0;
+            }
+            if (Bytes == null)
+            {
+                return -1;
+            }
+            if (other.Bytes == null)
+            {
+                return 1;
+            }
+            var minLength = Math.Min(Bytes.Length, other.Bytes.Length);
+            for (var i = 0; i < minLength; i++)
+            {
+                var comparison = Bytes[i].CompareTo(other.Bytes[i]);
+                if (comparison != 0)
+                {
+                    return comparison;
+                }
+            }
+            return Bytes.Length.CompareTo(other.Bytes.Length);
         }
         #endregion
     }
