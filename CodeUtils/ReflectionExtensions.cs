@@ -498,7 +498,7 @@ namespace cpGames.core
             }
             return null;
         }
-        
+
         public static bool IsSubclassOfRawGeneric(this Type toCheck, Type generic)
         {
             while (toCheck != null! && toCheck != typeof(object))
@@ -511,6 +511,11 @@ namespace cpGames.core
                 toCheck = toCheck.BaseType ?? typeof(object);
             }
             return false;
+        }
+
+        public static bool ImplementsInterface(this Type type, Type interfaceType)
+        {
+            return interfaceType.IsAssignableFrom(type);
         }
         #endregion
     }
