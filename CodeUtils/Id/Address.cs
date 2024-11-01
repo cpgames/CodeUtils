@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 namespace cpGames.core
 {
     /// <summary>
-    /// Address is an aggregation of multiple Ids. It is useful for navigating hierarchical
-    /// entity structure.
-    /// Instead of holding an array of Ids, Address is a flattened byte array
-    /// that contains id length followed by id's bytes.
-    /// e.g. Id1 = 12, Id2 = 234, Id3 = 5678,
-    /// Address = [2]12[3]234[4]5678
+    ///     Address is an aggregation of multiple Ids. It is useful for navigating hierarchical
+    ///     entity structure.
+    ///     Instead of holding an array of Ids, Address is a flattened byte array
+    ///     that contains id length followed by id's bytes.
+    ///     e.g. Id1 = 12, Id2 = 234, Id3 = 5678,
+    ///     Address = [2]12[3]234[4]5678
     /// </summary>
     public readonly struct Address
     {
@@ -22,11 +22,11 @@ namespace cpGames.core
 
         #region Fields
         public static Address INVALID = new();
-        private readonly byte[]? _bytes;
         #endregion
 
         #region Properties
-        public byte[]? Bytes => _bytes;
+        public byte[]? Bytes { get; }
+
         public int IdCount { get; }
         public bool IsValid => Bytes is { Length: > 0 };
         #endregion
@@ -43,12 +43,12 @@ namespace cpGames.core
                 }
                 size += id.Length;
             }
-            _bytes = new byte[size];
+            Bytes = new byte[size];
             var i = 0;
             foreach (var id in ids)
             {
-                _bytes[i++] = id.Length;
-                id.Bytes!.CopyTo(_bytes, i);
+                Bytes[i++] = id.Length;
+                id.Bytes!.CopyTo(Bytes, i);
                 i += id.Length;
             }
             IdCount = ids.Length;
@@ -56,7 +56,7 @@ namespace cpGames.core
 
         public Address(byte[] bytes)
         {
-            _bytes = bytes;
+            Bytes = bytes;
             IdCount = 0;
             if (bytes is { Length: > 0 })
             {
@@ -79,6 +79,12 @@ namespace cpGames.core
 
         public Address(string str)
         {
+            if (str.Length == 0)
+            {
+                Bytes = null;
+                IdCount = 0;
+                return;
+            }
             var idTokens = str.Split(':');
             var ids = new List<Id>();
             var size = idTokens.Length;
@@ -92,12 +98,12 @@ namespace cpGames.core
                 ids.Add(id);
                 size += id.Length;
             }
-            _bytes = new byte[size];
+            Bytes = new byte[size];
             var i = 0;
             foreach (var id in ids)
             {
-                _bytes[i++] = id.Length;
-                id.Bytes!.CopyTo(_bytes, i);
+                Bytes[i++] = id.Length;
+                id.Bytes!.CopyTo(Bytes, i);
                 i += id.Length;
             }
             IdCount = ids.Count;
@@ -107,27 +113,27 @@ namespace cpGames.core
         {
             if (other.IsValid)
             {
-                _bytes = new byte[other.Bytes!.Length];
-                other.Bytes.CopyTo(_bytes, 0);
+                Bytes = new byte[other.Bytes!.Length];
+                other.Bytes.CopyTo(Bytes, 0);
                 IdCount = other.IdCount;
             }
             else
             {
-                _bytes = null;
+                Bytes = null;
                 IdCount = 0;
             }
         }
 
         internal Address(byte[] bytes, int idCount)
         {
-            _bytes = bytes;
+            Bytes = bytes;
             IdCount = idCount;
         }
         #endregion
 
         #region Methods
         /// <summary>
-        /// Returns true if other Address is a subset of current Address.
+        ///     Returns true if other Address is a subset of current Address.
         /// </summary>
         public bool Contains(Address other)
         {
@@ -167,7 +173,7 @@ namespace cpGames.core
         }
 
         /// <summary>
-        /// Append Id to the end of this Address.
+        ///     Append Id to the end of this Address.
         /// </summary>
         public Address Append(Id id)
         {
