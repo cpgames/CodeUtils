@@ -79,6 +79,12 @@ namespace cpGames.core
 
         public Address(string str)
         {
+            if (string.IsNullOrEmpty(str))
+            {
+                _bytes = null;
+                IdCount = 0;
+                return;
+            }
             var idTokens = str.Split(':');
             var ids = new List<Id>();
             var size = idTokens.Length;
